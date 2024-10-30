@@ -106,15 +106,19 @@ def battery_charge_action(soc, power, E_tot, P_max, T):
         # calculate the energy discharged within a single time period.
         # think about the physical constraints of the battery (e.g. energy stored, power capacity)
         # think about if your energy is positive or negative
-        
+        deltaE = -1 * min(P_max * T, soc, power * T)
+      
     elif power < 0:  # excess generation - charge the battery
         # calculate the energy charged within a single time period.
         # think about the physical constraints of the battery (e.g. energy stored, power capacity)
         # think about if your energy is positive or negative
-        
+        deltaE = 1 * min(P_max * T, (E_tot - soc), -1 * power * T)
+
     else:  # zero powerflow
         # set deltaE to zero
-    
+        deltaE = 0
+        soc += deltaE
+        net_power = power + (deltaE / T)
     # update soc and calculate net_power
     return soc, net_power
 
